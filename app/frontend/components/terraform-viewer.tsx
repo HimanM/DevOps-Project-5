@@ -127,20 +127,26 @@ resource "aws_security_group" "backend_sg" {
         id: "instances",
         title: "EC2 Instances",
         code: `resource "aws_instance" "frontend" {
-  ami           = "ami-0892d3c7ee96c0bf7"
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public.id
-  # ...
+  ami                    = "ami-0892d3c7ee96c0bf7"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.public.id
+  vpc_security_group_ids = [aws_security_group.frontend_sg.id]
+  user_data              = file("user_data_frontend.sh")
+
+  tags = { Name = "frontend-server" }
 }
 
 resource "aws_instance" "backend" {
-  ami           = "ami-0892d3c7ee96c0bf7"
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.private.id
-  private_ip    = "10.0.2.20"
-  # ...
+  ami                    = "ami-0892d3c7ee96c0bf7"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.private.id
+  private_ip             = "10.0.2.20"
+  vpc_security_group_ids = [aws_security_group.backend_sg.id]
+  user_data              = file("user_data_backend.sh")
+
+  tags = { Name = "backend-server" }
 }`,
-        explanation: "Launches the EC2 instances. Frontend in Public Subnet. Backend in Private Subnet with a fixed private IP (10.0.2.20)."
+        explanation: "Launches EC2 instances with specific Security Groups and User Data scripts. 'user_data' scripts automatically install dependencies (Node.js, Python/FastAPI) and start the applications on boot."
     }
 ]
 
