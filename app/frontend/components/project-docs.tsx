@@ -1,5 +1,6 @@
+import { motion } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ExternalLink } from "lucide-react"
+import { BookMarked } from "lucide-react"
 
 export function ProjectDocs() {
     const terms = [
@@ -36,23 +37,39 @@ export function ProjectDocs() {
     ]
 
     return (
-        <div className="flex overflow-x-auto pb-6 gap-4 my-8 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible md:pb-0">
+        <div className="flex overflow-x-auto pb-4 md:pb-6 gap-3 md:gap-4 my-6 md:my-8 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible px-2 md:px-0">
             {terms.map((item, index) => (
-                <Card key={index} className="min-w-[280px] md:min-w-0 snap-center bg-slate-900 border-slate-800 hover:border-blue-500 transition-colors duration-300 group">
-                    <CardHeader>
-                        <CardTitle className="text-lg text-white flex items-center justify-between">
-                            {item.term}
-                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400">
-                                <ExternalLink className="w-4 h-4" />
-                            </a>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
-                            {item.desc}
-                        </p>
-                    </CardContent>
-                </Card>
+                <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="min-w-[260px] md:min-w-0 snap-center"
+                >
+                    <Card className="bg-slate-900 border-slate-800 hover:border-blue-500 transition-all duration-300 group h-full">
+                        <CardHeader className="pb-2 md:pb-3">
+                            <CardTitle className="text-sm md:text-base lg:text-lg text-white flex items-center justify-between gap-2">
+                                <span className="flex-1">{item.term}</span>
+                                <a
+                                    href={item.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-slate-500 hover:text-blue-400 transition-colors flex-shrink-0"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <BookMarked className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                </a>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-[11px] md:text-sm text-slate-400 group-hover:text-slate-300 transition-colors leading-relaxed">
+                                {item.desc}
+                            </p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             ))}
         </div>
     )

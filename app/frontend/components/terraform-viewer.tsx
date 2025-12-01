@@ -4,7 +4,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Info } from "lucide-react"
+import { Code2, FileCode } from "lucide-react"
 
 type TerraformBlock = {
     id: string
@@ -154,35 +154,44 @@ export function TerraformViewer() {
     const [hoveredBlock, setHoveredBlock] = useState<string | null>(null)
 
     return (
-        <div className="w-full my-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <motion.div
+            className="w-full my-6 md:my-8 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+        >
             <div className="lg:col-span-2">
-                <Card className="bg-slate-950 border-slate-800 h-[600px] flex flex-col">
-                    <CardHeader>
-                        <CardTitle className="text-white flex items-center gap-2">
+                <Card className="bg-slate-950 border-slate-800 h-[400px] md:h-[600px] flex flex-col">
+                    <CardHeader className="pb-3 md:pb-4">
+                        <CardTitle className="text-white flex items-center gap-2 text-base md:text-lg">
+                            <FileCode className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
                             <span className="text-purple-400">main.tf</span> Code Viewer
                         </CardTitle>
-                        <CardDescription>Hover over code blocks to understand their purpose.</CardDescription>
+                        <CardDescription className="text-xs md:text-sm">Hover over code blocks to understand their purpose.</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-1 overflow-hidden p-0">
                         <ScrollArea className="h-full w-full">
-                            <div className="p-4 space-y-4 font-mono text-sm">
+                            <div className="p-3 md:p-4 space-y-3 md:space-y-4 font-mono text-[10px] md:text-sm">
                                 {terraformBlocks.map((block) => (
-                                    <div
+                                    <motion.div
                                         key={block.id}
                                         onMouseEnter={() => setHoveredBlock(block.id)}
                                         onMouseLeave={() => setHoveredBlock(null)}
                                         className={`
-                      p-4 rounded-md border transition-all duration-200 cursor-help
+                      p-3 md:p-4 rounded-md border transition-all duration-200 cursor-help
                       ${hoveredBlock === block.id
                                                 ? "bg-slate-900 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.1)]"
                                                 : "bg-slate-950 border-transparent hover:bg-slate-900/50 hover:border-slate-800"}
                     `}
+                                        whileHover={{ scale: 1.01 }}
+                                        transition={{ duration: 0.2 }}
                                     >
-                                        <div className="text-slate-500 mb-1 text-xs select-none"># {block.title}</div>
-                                        <pre className="text-slate-300 overflow-x-auto whitespace-pre-wrap">
+                                        <div className="text-slate-500 mb-1 text-[9px] md:text-xs select-none"># {block.title}</div>
+                                        <pre className="text-slate-300 overflow-x-auto whitespace-pre-wrap text-[10px] md:text-sm leading-relaxed">
                                             {block.code}
                                         </pre>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
                         </ScrollArea>
@@ -191,7 +200,7 @@ export function TerraformViewer() {
             </div>
 
             <div className="lg:col-span-1">
-                <div className="sticky top-8">
+                <div className="sticky top-4 md:top-8">
                     <AnimatePresence mode="wait">
                         {hoveredBlock ? (
                             <motion.div
@@ -202,14 +211,14 @@ export function TerraformViewer() {
                                 transition={{ duration: 0.2 }}
                             >
                                 <Card className="bg-slate-900 border-blue-500/50 shadow-lg">
-                                    <CardHeader>
-                                        <CardTitle className="text-blue-400 flex items-center gap-2">
-                                            <Info className="w-5 h-5" />
+                                    <CardHeader className="pb-3 md:pb-4">
+                                        <CardTitle className="text-blue-400 flex items-center gap-2 text-sm md:text-base">
+                                            <Code2 className="w-4 h-4 md:w-5 md:h-5" />
                                             {terraformBlocks.find(b => b.id === hoveredBlock)?.title}
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent>
-                                        <p className="text-slate-300 leading-relaxed">
+                                        <p className="text-slate-300 leading-relaxed text-xs md:text-sm">
                                             {terraformBlocks.find(b => b.id === hoveredBlock)?.explanation}
                                         </p>
                                     </CardContent>
@@ -221,16 +230,16 @@ export function TerraformViewer() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="h-full flex items-center justify-center p-8 text-slate-600 border-2 border-dashed border-slate-800 rounded-lg"
+                                className="h-full flex items-center justify-center p-6 md:p-8 text-slate-600 border-2 border-dashed border-slate-800 rounded-lg"
                             >
                                 <div className="text-center">
-                                    <p>Hover over the code blocks to see detailed explanations here.</p>
+                                    <p className="text-xs md:text-sm">Hover over the code blocks to see detailed explanations here.</p>
                                 </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }

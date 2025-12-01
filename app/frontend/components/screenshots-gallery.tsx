@@ -1,6 +1,6 @@
 "use client"
 
-import { Terminal, Cloud, CheckCircle2, Image as ImageIcon, X, Maximize2 } from "lucide-react"
+import { Terminal, Cloud, CheckCircle2, Images, X, Maximize2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
@@ -12,42 +12,46 @@ export function ScreenshotsGallery() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
     return (
-        <div className="w-full my-16">
+        <div className="w-full my-12 md:my-16">
             <motion.h3
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-8 flex items-center gap-3"
+                className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-6 md:mb-8 flex items-center gap-2 md:gap-3 px-2"
             >
-                <ImageIcon className="text-purple-400 w-8 h-8" /> Project Screenshots
+                <Images className="text-purple-400 w-6 h-6 md:w-8 md:h-8" />
+                <span>Project Screenshots</span>
             </motion.h3>
 
             <Tabs defaultValue="terraform" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-xl h-auto gap-2">
+                <TabsList className="grid w-full grid-cols-3 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1 md:p-1.5 rounded-xl h-auto gap-1.5 md:gap-2">
                     <TabsTrigger
                         value="terraform"
-                        className="h-12 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-purple-900/20 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 rounded-lg border border-transparent data-[state=active]:border-purple-500/50"
+                        className="h-9 md:h-12 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-purple-900/20 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 rounded-lg border border-transparent data-[state=active]:border-purple-500/50 text-xs md:text-base"
                     >
-                        <Icons.Terraform className="w-5 h-5 mr-2" />
-                        <span className="text-base font-medium">Terraform</span>
+                        <Icons.Terraform className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
+                        <span className="font-medium hidden xs:inline">Terraform</span>
+                        <span className="font-medium xs:hidden">TF</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="aws"
-                        className="h-12 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-900/20 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 rounded-lg border border-transparent data-[state=active]:border-blue-500/50"
+                        className="h-9 md:h-12 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-900/20 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 rounded-lg border border-transparent data-[state=active]:border-blue-500/50 text-xs md:text-base"
                     >
-                        <Icons.AWS className="w-5 h-5 mr-2" />
-                        <span className="text-base font-medium">AWS Console</span>
+                        <Icons.AWS className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
+                        <span className="font-medium hidden xs:inline">AWS Console</span>
+                        <span className="font-medium xs:hidden">AWS</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="verify"
-                        className="h-12 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-green-900/20 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 rounded-lg border border-transparent data-[state=active]:border-green-500/50"
+                        className="h-9 md:h-12 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-green-900/20 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 rounded-lg border border-transparent data-[state=active]:border-green-500/50 text-xs md:text-base"
                     >
-                        <CheckCircle2 className="w-5 h-5 mr-2" />
-                        <span className="text-base font-medium">Verification</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
+                        <span className="font-medium hidden xs:inline">Verification</span>
+                        <span className="font-medium xs:hidden">Test</span>
                     </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="terraform" className="mt-8 space-y-8">
+                <TabsContent value="terraform" className="mt-6 md:mt-8 space-y-6 md:space-y-8">
                     <ScreenshotCard
                         title="1. Terraform Init"
                         description="Initializing the Terraform working directory and downloading providers."
@@ -71,7 +75,7 @@ export function ScreenshotsGallery() {
                     />
                 </TabsContent>
 
-                <TabsContent value="aws" className="mt-8 space-y-8">
+                <TabsContent value="aws" className="mt-6 md:mt-8 space-y-6 md:space-y-8">
                     <ScreenshotCard
                         title="VPC Dashboard"
                         description="The created VPC with its ID and state."
@@ -102,7 +106,7 @@ export function ScreenshotsGallery() {
                     />
                 </TabsContent>
 
-                <TabsContent value="verify" className="mt-8 space-y-8">
+                <TabsContent value="verify" className="mt-6 md:mt-8 space-y-6 md:space-y-8">
                     <ScreenshotCard
                         title="Frontend Instance Summary"
                         description="View the Public IPv4 address of the Frontend instance to access the application."
@@ -140,7 +144,7 @@ export function ScreenshotsGallery() {
                                 onClick={() => setSelectedImage(null)}
                                 className="absolute -top-12 right-0 md:top-4 md:right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
                             >
-                                <X className="w-8 h-8" />
+                                <X className="w-6 h-6 md:w-8 md:h-8" />
                             </button>
                             <div className="relative w-full h-full">
                                 <Image
@@ -178,23 +182,24 @@ function ScreenshotCard({ title, description, src, color = "purple", onClick }: 
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
+            whileHover={{ scale: 1.01 }}
         >
             <Card
                 className={`bg-slate-950/40 backdrop-blur-sm border-slate-800/60 overflow-hidden group transition-all duration-500 ${borderColors[color]} ${glowColors[color]} cursor-pointer`}
                 onClick={onClick}
             >
-                <CardHeader className="border-b border-slate-800/60 bg-slate-900/20 p-6">
-                    <CardTitle className="text-white text-xl font-medium tracking-wide flex items-center gap-2 justify-between">
+                <CardHeader className="border-b border-slate-800/60 bg-slate-900/20 p-4 md:p-6">
+                    <CardTitle className="text-white text-base md:text-xl font-medium tracking-wide flex items-center gap-2 justify-between">
                         <div className="flex items-center gap-2">
-                            <div className={`w-2 h-8 rounded-full bg-gradient-to-b from-${color}-400 to-${color}-600`} />
-                            {title}
+                            <div className={`w-1.5 md:w-2 h-6 md:h-8 rounded-full bg-gradient-to-b from-${color}-400 to-${color}-600`} />
+                            <span className="text-sm md:text-base lg:text-xl">{title}</span>
                         </div>
-                        <Maximize2 className="w-5 h-5 text-slate-500 group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                        <Maximize2 className="w-4 h-4 md:w-5 md:h-5 text-slate-500 group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
                     </CardTitle>
-                    <p className="text-sm text-slate-400 pl-4">{description}</p>
+                    <p className="text-xs md:text-sm text-slate-400 pl-3 md:pl-4">{description}</p>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="relative w-full h-[300px] md:h-[500px] bg-slate-950/80">
+                    <div className="relative w-full h-[200px] sm:h-[250px] md:h-[400px] lg:h-[500px] bg-slate-950/80">
                         <Image
                             src={src}
                             alt={title}
@@ -203,8 +208,8 @@ function ScreenshotCard({ title, description, src, color = "purple", onClick }: 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-20" />
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-                            <span className="bg-black/50 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-md border border-white/10 flex items-center gap-2">
-                                <Maximize2 className="w-4 h-4" /> Click to expand
+                            <span className="bg-black/50 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-md border border-white/10 flex items-center gap-2">
+                                <Maximize2 className="w-3 h-3 md:w-4 md:h-4" /> Click to expand
                             </span>
                         </div>
                     </div>
