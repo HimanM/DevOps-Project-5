@@ -27,7 +27,7 @@ export default function Home() {
     } catch (err) {
       if (process.env.NEXT_PUBLIC_DEPLOY_SOURCE === "github-pages") {
         setError(
-          "Bro... clone this repo and deploy on AWS yourself 😭 I'm hosting on GitHub Pages — I can't afford an EC2 💀"
+          "Bro... clone this repo and deploy it on AWS yourself. I'm hosting this on GitHub Pages because an EC2 instance would bankrupt me faster than my degree already did."
         )
       } else {
         // Normal error message
