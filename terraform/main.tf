@@ -6,7 +6,7 @@ provider "aws" {
 # VPC
 # ---------------------------
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -19,10 +19,10 @@ resource "aws_vpc" "main" {
 # Subnets
 # ---------------------------
 resource "aws_subnet" "public" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "us-west-2a"
+  availability_zone       = "us-west-2a"
 
   tags = {
     Name = "devops-project-5-public-subnet"
@@ -111,8 +111,8 @@ resource "aws_route_table_association" "private_assoc" {
 
 # Allow frontend to be accessed publicly
 resource "aws_security_group" "frontend_sg" {
-  name        = "frontend-sg"
-  vpc_id      = aws_vpc.main.id
+  name   = "frontend-sg"
+  vpc_id = aws_vpc.main.id
 
   ingress {
     description = "Allow HTTP"
@@ -126,6 +126,14 @@ resource "aws_security_group" "frontend_sg" {
     description = "Allow HTTPS"
     from_port   = 443
     to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow Next.js"
+    from_port   = 3000
+    to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -156,10 +164,10 @@ resource "aws_security_group" "backend_sg" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    description = "Allow backend requests from frontend SG"
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
+    description     = "Allow backend requests from frontend SG"
+    from_port       = 8000
+    to_port         = 8000
+    protocol        = "tcp"
     security_groups = [aws_security_group.frontend_sg.id]
   }
 
@@ -179,9 +187,9 @@ resource "aws_security_group" "backend_sg" {
 # EC2: FRONTEND (PUBLIC)
 # ---------------------------
 resource "aws_instance" "frontend" {
-  ami           = "ami-0892d3c7ee96c0bf7" # Amazon Linux 2023 for us-west-2
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public.id
+  ami                    = "ami-0892d3c7ee96c0bf7" # Amazon Linux 2023 for us-west-2
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.frontend_sg.id]
 
   user_data = file("user_data_frontend.sh")
@@ -195,10 +203,10 @@ resource "aws_instance" "frontend" {
 # EC2: BACKEND (PRIVATE)
 # ---------------------------
 resource "aws_instance" "backend" {
-  ami           = "ami-0892d3c7ee96c0bf7"
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.private.id
-  private_ip    = "10.0.2.20"
+  ami                    = "ami-0892d3c7ee96c0bf7"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.private.id
+  private_ip             = "10.0.2.20"
   vpc_security_group_ids = [aws_security_group.backend_sg.id]
 
   user_data = file("user_data_backend.sh")

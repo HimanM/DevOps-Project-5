@@ -1,10 +1,12 @@
 #!/bin/bash
-yum update -y
-yum install -y git python3 python3-pip
+sudo apt-get update -y
+sudo apt-get install -y git python3 python3-pip
 
 # Clone repo
 cd /home/ubuntu
 git clone https://github.com/HimanM/DevOps-Project-5.git
+# Fix permissions
+sudo chown -R ubuntu:ubuntu /home/ubuntu/DevOps-Project-5
 cd DevOps-Project-5/app/backend
 
 # Install FastAPI & Uvicorn
@@ -16,7 +18,7 @@ if [ -f "requirements.txt" ]; then
 fi
 
 # Create a systemd service for FastAPI
-cat <<EOF > /etc/systemd/system/fastapi.service
+cat <<EOF | sudo tee /etc/systemd/system/fastapi.service
 [Unit]
 Description=FastAPI App
 After=network.target
@@ -32,6 +34,6 @@ WantedBy=multi-user.target
 EOF
 
 # Enable + start service
-systemctl daemon-reload
-systemctl enable fastapi
-systemctl start fastapi
+sudo systemctl daemon-reload
+sudo systemctl enable fastapi
+sudo systemctl start fastapi
