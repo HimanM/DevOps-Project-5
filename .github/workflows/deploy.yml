@@ -30,6 +30,10 @@ jobs:
         working-directory: ./app/frontend
         run: npm ci
 
+      - name: Remove API routes for static export
+        working-directory: ./app/frontend
+        run: rm -rf app/api
+
       - name: Build for GitHub Pages
         working-directory: ./app/frontend
         run: npm run build
