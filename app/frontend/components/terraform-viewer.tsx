@@ -20,13 +20,13 @@ const terraformBlocks: TerraformBlock[] = [
         code: `provider "aws" {
   region = "us-west-2"
 }`,
-        explanation: "Configures the AWS provider to deploy resources in the US West (Oregon) region."
+        explanation: "Configures the AWS provider to deploy resources in the US West (Oregon) region. This tells Terraform which cloud provider to use and where to create the infrastructure."
     },
     {
         id: "vpc",
         title: "VPC Resource",
         code: `resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -34,39 +34,48 @@ const terraformBlocks: TerraformBlock[] = [
     Name = "devops-project-5"
   }
 }`,
-        explanation: "Creates the Virtual Private Cloud (VPC) with a CIDR block of 10.0.0.0/16, providing 65,536 IP addresses. DNS support is enabled for hostname resolution."
+        explanation: "Creates the Virtual Private Cloud (VPC) with a CIDR block of 10.0.0.0/16, providing 65,536 IP addresses. DNS support and hostnames are enabled to allow instances to resolve domain names and be assigned DNS hostnames within the VPC."
     },
     {
         id: "subnets",
-        title: "Subnets",
+        title: "Public and Private Subnets",
         code: `resource "aws_subnet" "public" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "us-west-2a"
-  tags = { Name = "devops-project-5-public-subnet" }
+  availability_zone       = "us-west-2a"
+
+  tags = {
+    Name = "devops-project-5-public-subnet"
+  }
 }
 
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = "us-west-2a"
-  tags = { Name = "devops-project-5-private-subnet" }
+
+  tags = {
+    Name = "devops-project-5-private-subnet"
+  }
 }`,
-        explanation: "Defines two subnets in the same Availability Zone. The Public subnet (10.0.1.0/24) assigns public IPs automatically. The Private subnet (10.0.2.0/24) does not."
+        explanation: "Creates two subnets in the same Availability Zone (us-west-2a). The Public subnet (10.0.1.0/24) automatically assigns public IPs to instances launched in it. The Private subnet (10.0.2.0/24) does not assign public IPs, keeping instances isolated from direct internet access."
     },
     {
         id: "igw",
         title: "Internet Gateway",
         code: `resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
-  tags = { Name = "devops-project-5-igw" }
+
+  tags = {
+    Name = "devops-project-5-igw"
+  }
 }`,
-        explanation: "Attaches an Internet Gateway to the VPC, allowing communication between instances in public subnets and the internet."
+        explanation: "Attaches an Internet Gateway to the VPC. This allows resources in public subnets to communicate with the internet, enabling both inbound and outbound internet traffic for publicly accessible instances."
     },
     {
         id: "nat",
-        title: "NAT Gateway",
+        title: "NAT Gateway & Elastic IP",
         code: `resource "aws_eip" "nat_ip" {
   domain = "vpc"
 }
@@ -74,79 +83,171 @@ resource "aws_subnet" "private" {
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_ip.id
   subnet_id     = aws_subnet.public.id
-  tags = { Name = "devops-project-5-nat" }
+
+  tags = {
+    Name = "devops-project-5-nat"
+  }
 }`,
-        explanation: "Sets up a NAT Gateway in the Public Subnet with an Elastic IP. This allows instances in the Private Subnet to initiate outbound traffic (e.g., for updates) without accepting inbound connections."
+        explanation: "Creates an Elastic IP and a NAT Gateway in the public subnet. This allows instances in the private subnet to initiate outbound connections to the internet (e.g., for software updates) while preventing unsolicited inbound connections, maintaining security."
     },
     {
-        id: "routes",
+        id: "route_tables",
         title: "Route Tables",
         code: `resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
+
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "devops-project-5-public-rt"
   }
 }
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
+
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat.id
   }
+
+  tags = {
+    Name = "devops-project-5-private-rt"
+  }
 }`,
-        explanation: "Configures routing. Public subnet traffic goes to the Internet Gateway. Private subnet traffic goes to the NAT Gateway."
+        explanation: "Configures routing tables for both subnets. The public route table directs all internet-bound traffic (0.0.0.0/0) to the Internet Gateway. The private route table routes internet-bound traffic through the NAT Gateway, enabling outbound access while maintaining security."
     },
     {
-        id: "security_groups",
-        title: "Security Groups",
+        id: "route_associations",
+        title: "Route Table Associations",
+        code: `resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "private_assoc" {
+  subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
+}`,
+        explanation: "Associates the route tables with their respective subnets. This ensures that traffic from the public subnet uses the public route table (via Internet Gateway) and traffic from the private subnet uses the private route table (via NAT Gateway)."
+    },
+    {
+        id: "frontend_sg",
+        title: "Frontend Security Group",
         code: `resource "aws_security_group" "frontend_sg" {
-  name        = "frontend-sg"
+  name   = "frontend-sg"
+  vpc_id = aws_vpc.main.id
+
   ingress {
+    description = "Allow HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  # ... (443 and 22 also allowed)
-}
 
-resource "aws_security_group" "backend_sg" {
-  name   = "backend-sg"
   ingress {
-    from_port   = 8000
-    to_port     = 8000
+    description = "Allow HTTPS"
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
-    security_groups = [aws_security_group.frontend_sg.id]
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow Next.js"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "frontend-sg"
   }
 }`,
-        explanation: "Defines firewall rules. Frontend accepts HTTP/HTTPS from anywhere. Backend ONLY accepts traffic on port 8000 from the Frontend Security Group."
+        explanation: "Defines firewall rules for the frontend instance. Allows inbound HTTP (80), HTTPS (443), Next.js (3000), and SSH (22) from anywhere on the internet. Allows all outbound traffic. This makes the frontend publicly accessible while maintaining control over which ports are open."
     },
     {
-        id: "instances",
-        title: "EC2 Instances",
+        id: "backend_sg",
+        title: "Backend Security Group",
+        code: `resource "aws_security_group" "backend_sg" {
+  name   = "backend-sg"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    description     = "Allow backend requests from frontend SG"
+    from_port       = 8000
+    to_port         = 8000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.frontend_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "backend-sg"
+  }
+}`,
+        explanation: "Defines strict firewall rules for the backend instance. ONLY accepts traffic on port 8000 from instances in the frontend security group. This implements the principle of least privilege - the backend is completely isolated from the internet and can only be accessed by the frontend, ensuring maximum security."
+    },
+    {
+        id: "frontend_instance",
+        title: "Frontend EC2 Instance",
         code: `resource "aws_instance" "frontend" {
   ami                    = "ami-0892d3c7ee96c0bf7"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.frontend_sg.id]
-  user_data              = file("user_data_frontend.sh")
 
-  tags = { Name = "frontend-server" }
-}
+  user_data = file("user_data_frontend.sh")
 
-resource "aws_instance" "backend" {
+  tags = {
+    Name = "frontend-server"
+  }
+}`,
+        explanation: "Launches the frontend EC2 instance in the public subnet using Amazon Linux 2023 AMI. Uses t2.micro (free tier eligible) instance type. The user_data script automatically installs Node.js, clones the repository, and starts the Next.js application on boot, making deployment fully automated."
+    },
+    {
+        id: "backend_instance",
+        title: "Backend EC2 Instance",
+        code: `resource "aws_instance" "backend" {
   ami                    = "ami-0892d3c7ee96c0bf7"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.private.id
   private_ip             = "10.0.2.20"
   vpc_security_group_ids = [aws_security_group.backend_sg.id]
-  user_data              = file("user_data_backend.sh")
 
-  tags = { Name = "backend-server" }
+  user_data = file("user_data_backend.sh")
+
+  tags = {
+    Name = "backend-server"
+  }
 }`,
-        explanation: "Launches EC2 instances with specific Security Groups and User Data scripts. 'user_data' scripts automatically install dependencies (Node.js, Python/FastAPI) and start the applications on boot."
+        explanation: "Launches the backend EC2 instance in the private subnet with a static private IP (10.0.2.20). Has no public IP address, making it completely isolated from direct internet access. The user_data script automatically installs Python, FastAPI dependencies, and starts the backend API on boot. Only accessible from the frontend instance via port 8000."
     }
 ]
 
