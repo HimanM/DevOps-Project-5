@@ -38,7 +38,9 @@ jobs:
 
       - name: Add .nojekyll file
         working-directory: ./app/frontend
-        run: touch out/.nojekyll
+        run: |
+          mkdir -p out
+          touch out/.nojekyll
 
       - name: Add CNAME file
         working-directory: ./app/frontend
