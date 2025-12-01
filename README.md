@@ -39,7 +39,7 @@ This project demonstrates the implementation of a production-ready AWS VPC archi
 
 The infrastructure implements a classic 2-tier VPC architecture pattern, separating the presentation layer (frontend) from the application layer (backend):
 
-![AWS VPC Architecture](docs/architecture.png)
+![AWS VPC Architecture](docs/Architecture.png)
 
 ![AWS VPC Dashboard](docs/aws%20vpc.png)
 
