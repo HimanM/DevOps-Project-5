@@ -79,15 +79,6 @@ export function TerraformExplainer() {
                         <CardContent>
                             <div className="grid grid-cols-1 gap-4">
                                 <div className="bg-slate-900 p-4 rounded-md border border-slate-800">
-                                    <h4 className="font-bold text-white mb-2">Frontend Instance</h4>
-                                    <ul className="list-disc list-inside text-sm text-slate-400 space-y-1">
-                                        <li>AMI: Amazon Linux 2023</li>
-                                        <li>Type: t2.micro</li>
-                                        <li>Subnet: Public</li>
-                                        <li>User Data: Installs Node.js, PM2, and clones repo</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-slate-900 p-4 rounded-md border border-slate-800">
                                     <h4 className="font-bold text-white mb-2">Backend Instance</h4>
                                     <ul className="list-disc list-inside text-sm text-slate-400 space-y-1">
                                         <li>AMI: Amazon Linux 2023</li>
@@ -95,6 +86,15 @@ export function TerraformExplainer() {
                                         <li>Subnet: Private</li>
                                         <li>Private IP: Fixed at <code className="text-yellow-500">10.0.2.20</code></li>
                                         <li>User Data: Installs Python, FastAPI, and runs Uvicorn</li>
+                                    </ul>
+                                </div>
+                                <div className="bg-slate-900 p-4 rounded-md border border-slate-800">
+                                    <h4 className="font-bold text-white mb-2">Frontend Instance</h4>
+                                    <ul className="list-disc list-inside text-sm text-slate-400 space-y-1">
+                                        <li>AMI: Amazon Linux 2023</li>
+                                        <li>Type: t2.small</li>
+                                        <li>Subnet: Public</li>
+                                        <li>User Data: Installs Node.js, PM2, and clones repo</li>
                                     </ul>
                                 </div>
                             </div>

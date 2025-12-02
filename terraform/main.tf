@@ -209,7 +209,7 @@ resource "aws_instance" "frontend" {
   ]
 
   ami                    = "ami-0892d3c7ee96c0bf7"
-  instance_type          = "t2.micro"
+  instance_type          = "t2.small"
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.frontend_sg.id]
 
