@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 
   // Enable static export for GitHub Pages
-  output: 'export',
+  ...(isGithubPages ? { output: 'export' } : {}),
 
   // Disable image optimization for static export
   images: {

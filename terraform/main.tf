@@ -184,22 +184,6 @@ resource "aws_security_group" "backend_sg" {
 }
 
 # ---------------------------
-# EC2: FRONTEND (PUBLIC)
-# ---------------------------
-resource "aws_instance" "frontend" {
-  ami                    = "ami-0892d3c7ee96c0bf7" # Amazon Linux 2023 for us-west-2
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.frontend_sg.id]
-
-  user_data = file("user_data_frontend.sh")
-
-  tags = {
-    Name = "frontend-server"
-  }
-}
-
-# ---------------------------
 # EC2: BACKEND (PRIVATE)
 # ---------------------------
 resource "aws_instance" "backend" {
@@ -213,5 +197,25 @@ resource "aws_instance" "backend" {
 
   tags = {
     Name = "backend-server"
+  }
+}
+
+# ---------------------------
+# EC2: FRONTEND (PUBLIC)
+# ---------------------------
+resource "aws_instance" "frontend" {
+  depends_on = [
+    aws_instance.backend
+  ]
+
+  ami                    = "ami-0892d3c7ee96c0bf7"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.public.id
+  vpc_security_group_ids = [aws_security_group.frontend_sg.id]
+
+  user_data = file("user_data_frontend.sh")
+
+  tags = {
+    Name = "frontend-server"
   }
 }
