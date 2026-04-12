@@ -98,7 +98,7 @@ export default function Home() {
             <Button
               variant="secondary"
               className="gap-2 bg-white text-slate-950 hover:bg-slate-200 h-10 md:h-12 px-5 md:px-6 rounded-full transition-all duration-300 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_-5px_rgba(255,255,255,0.5)] font-medium text-sm md:text-base"
-              onClick={() => window.open("https://github.com/HimanM/DevOps-Project-5", "_blank")}
+              onClick={() => window.open("https://github.com/HimanM/aws-secure-two-tier-architecture", "_blank")}
             >
               <Icons.GitHub className="w-4 h-4 md:w-5 md:h-5" />
               View Repository

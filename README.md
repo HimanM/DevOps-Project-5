@@ -174,8 +174,8 @@ Follow these steps to clone and replicate the project:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/HimanM/DevOps-Project-5.git
-cd DevOps-Project-5
+git clone https://github.com/HimanM/aws-secure-two-tier-architecture.git
+cd aws-secure-two-tier-architecture
 ```
 
 This downloads the complete project including Terraform configurations, application code, and documentation.
@@ -655,8 +655,8 @@ This project is part of a DevOps learning series focused on building real-world 
 ### Contact & Feedback
 
 For questions, feedback, or issues:
-- **Open an Issue:** Use the [GitHub Issues](https://github.com/HimanM/DevOps-Project-5/issues) page
-- **Discussions:** Join the conversation in [GitHub Discussions](https://github.com/HimanM/DevOps-Project-5/discussions)
+- **Open an Issue:** Use the [GitHub Issues](https://github.com/HimanM/aws-secure-two-tier-architecture/issues) page
+- **Discussions:** Join the conversation in [GitHub Discussions](https://github.com/HimanM/aws-secure-two-tier-architecture/discussions)
 - **Pull Requests:** Contributions and improvements are welcome!
 
 ### Connect

@@ -116,7 +116,7 @@ export function TerraformExplainer() {
 yum update -y
 curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 yum install -y nodejs git
-git clone https://github.com/HimanM/DevOps-Project-5.git app
+git clone https://github.com/HimanM/aws-secure-two-tier-architecture.git app
 cd app/frontend
 echo "NEXT_PUBLIC_BACKEND_URL=http://10.0.2.20:8000" > .env.production
 npm install

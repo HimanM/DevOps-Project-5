@@ -4,10 +4,10 @@ sudo apt-get install -y git python3 python3-pip
 
 # Clone repo
 cd /home/ubuntu
-git clone https://github.com/HimanM/DevOps-Project-5.git
+git clone https://github.com/HimanM/aws-secure-two-tier-architecture.git
 # Fix permissions
-sudo chown -R ubuntu:ubuntu /home/ubuntu/DevOps-Project-5
-cd DevOps-Project-5/app/backend
+sudo chown -R ubuntu:ubuntu /home/ubuntu/aws-secure-two-tier-architecture
+cd aws-secure-two-tier-architecture/app/backend
 
 # Install FastAPI & Uvicorn
 pip3 install fastapi uvicorn
@@ -25,7 +25,7 @@ After=network.target
 
 [Service]
 User=ubuntu
-WorkingDirectory=/home/ubuntu/DevOps-Project-5/app/backend
+WorkingDirectory=/home/ubuntu/aws-secure-two-tier-architecture/app/backend
 ExecStart=/usr/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
 Restart=always
 
