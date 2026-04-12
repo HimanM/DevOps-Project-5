@@ -8,10 +8,10 @@ sudo apt-get install -y nodejs git
 
 # Clone your repo
 cd /home/ubuntu
-git clone https://github.com/HimanM/DevOps-Project-5.git
+git clone https://github.com/HimanM/aws-secure-two-tier-architecture.git
 # Fix permissions just in case
-sudo chown -R ubuntu:ubuntu /home/ubuntu/DevOps-Project-5
-cd DevOps-Project-5/app/frontend
+sudo chown -R ubuntu:ubuntu /home/ubuntu/aws-secure-two-tier-architecture
+cd aws-secure-two-tier-architecture/app/frontend
 
 # Create .env.production
 echo "NEXT_PUBLIC_BACKEND_URL=http://10.0.2.20:8000" | sudo tee .env.production > /dev/null
