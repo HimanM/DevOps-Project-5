@@ -1,3 +1,9 @@
+<!-- BANNER_START -->
+<p align="center">
+  <img src="./.banner/banner.svg" width="100%" alt="Project Banner">
+</p>
+<!-- BANNER_END -->
+
 # AWS VPC 2-Tier Architecture with Terraform
 
 > A hands-on DevOps project demonstrating secure AWS networking patterns with Infrastructure as Code
