@@ -12,7 +12,7 @@
 
 This project demonstrates the deployment of a secure 2-tier AWS VPC architecture using Terraform. It showcases real-world cloud networking patterns by deploying a Next.js frontend in a public subnet and a FastAPI backend in a private subnet, emphasizing network segmentation, security best practices, and Infrastructure as Code principles.
 
-**Live Demo:** [devops5.himanmanduja.fun](https://devops5.himanmanduja.fun)
+**Live Demo:** [devops5.himanm.com](https://devops5.himanm.com)
 
 ## Table of Contents
 
